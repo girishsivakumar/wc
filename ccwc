@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+def countNumberOfBytesFromFile(file)
+    File.foreach(file).reduce(0) {|count, line| count+line.bytesize}
+end
+
+def countNumberOfBytes(text)
+    text.bytesize
+end
+
+def countNumberOfLinesFromFile(file)
+    File.foreach(file).inject(0) {|count, line| count+1}
+end
+
+def countNumberOfLines(text)
+    text.lines.count
+end
+
+def countNumberOfWordsFromFile(file)
+    File.foreach(file).reduce(0) { |count, line| count+line.split.length}
+end
+
+def countNumberOfWords(text)
+    text.split.count
+end
+
+def countNumberOfCharactersFromFile(file)
+    File.foreach(file).reduce(0) { |count, line| count+line.length}
+end
+
+def countNumberOfCharacters(text)
+    text.length
+end
+
+def checkArguementLength(arg)
+    arg.length <= 2
+end
+
+def wc(arg, text)
+    if text.length > 0 && arg[0] == "-c"
+        puts "#{countNumberOfBytes(text)}"
+    elsif text.length > 0 && arg[0] == "-l"
+        puts "#{countNumberOfLines(text)}"
+    elsif text.length > 0 && arg[0] == "-w"
+        puts "#{countNumberOfWords(text)}"
+    elsif text.length > 0 && arg[0] == "-m"
+        puts "#{countNumberOfCharacters(text)}"
+    elsif text.length >0
+        puts "#{countNumberOfLines(text)}" + " " + "#{countNumberOfWords(text)}" + " " + "#{countNumberOfBytes(text)}"
+    elsif arg[0] == "-c"
+        puts "#{countNumberOfBytesFromFile(arg[1])}" + " " + arg[1]
+    elsif arg[0] == "-l"
+        puts "#{countNumberOfLinesFromFile(arg[1])}" + " " + arg[1]
+    elsif arg[0] == "-w"
+        puts "#{countNumberOfWordsFromFile(arg[1])}" + " " + arg[1]
+    elsif arg[0] == "-m"
+        puts "#{countNumberOfCharactersFromFile(arg[1])}" + " " + arg[1]
+    else
+        puts "#{countNumberOfLinesFromFile(arg[0])}" + " " + "#{countNumberOfWordsFromFile(arg[0])}" + " " + "#{countNumberOfBytesFromFile(arg[0])}" + " " + arg[0]
+    end
+end
+
+input_text = $stdin.tty? ? "" :  STDIN.read
+
+if checkArguementLength(ARGV)
+    wc(ARGV, input_text)
+else
+    raise ArgumentError, "Invalid Arguements"
+end
